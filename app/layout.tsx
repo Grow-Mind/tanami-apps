@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/layout/theme-provider";
 import { AuthProvider } from "@/lib/auth-context";
 import { Navbar } from "@/components/layout/navbar";
 import  { Footer } from "@/components/layout/footer";
+import { ChatWidget } from "@/components/chat-widget";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,6 +32,7 @@ export default function RootLayout({
             <Navbar />
             <main className="min-h-screen pt-20">{children}</main>
             <Footer />
+            <ChatWidget />
           </AuthProvider>
         </ThemeProvider>
       </body>
