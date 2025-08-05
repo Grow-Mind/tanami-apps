@@ -7,7 +7,6 @@ import os
 import io
 import requests
 import tensorflow as tf
-import tempfile
 
 plant_disease_bp = Blueprint('plant_disease', __name__)
 
@@ -16,8 +15,6 @@ LOCAL_MODEL = os.getenv("LOCAL_MODEL", "model.h5")
 CLOUD_MODEL_URL = os.getenv("MODEL_URL", "")
 
 CLASS_NAMES = ["early_blight", "late_blight", "healthy"]
-
-MODEL_PATH = os.path.join(os.getcwd(), LOCAL_MODEL)
 
 model = None
 try:
@@ -36,7 +33,6 @@ try:
 
             model = tf.keras.models.load_model("temp_model.h5")
             print("Model loaded from URL.")
-
         else:
             print("No model path or URL found. Fallback to mock.")
             USE_MOCK = True
@@ -51,8 +47,9 @@ def detect():
     if USE_MOCK or model is None:
         return jsonify({
             "disease_class": "mock_early_blight",
+            "category": "early",
             "confidence": 0.87,
-            "note": "Model belum tersedia atau gagal dimuat (mock mode aktif)"
+            "recommendation": "Model mock aktif. Hasil tidak akurat. Disarankan jalankan ulang server dengan model aktif."
         }), 200
 
     file = request.files.get('image')
@@ -70,6 +67,28 @@ def detect():
         confidence = float(np.max(preds))
         class_label = CLASS_NAMES[class_idx]
 
+        # Mapping label ke kategori dan rekomendasi
+        category_mapping = {
+            "healthy": {
+                "category": "health",
+                "recommendation": "Tanaman sehat. Tetap pantau dan rawat secara rutin."
+            },
+            "early_blight": {
+                "category": "early",
+                "recommendation": "Terdeteksi gejala awal penyakit. Disarankan penyemprotan fungisida ringan dan perbaikan drainase."
+            },
+            "late_blight": {
+                "category": "late",
+                "recommendation": "Penyakit stadium lanjut terdeteksi. Pertimbangkan untuk memangkas bagian yang terinfeksi dan gunakan fungisida sistemik."
+            }
+        }
+
+        result = category_mapping.get(class_label, {
+            "category": "unknown",
+            "recommendation": "Tidak ada rekomendasi tersedia."
+        })
+
+        # Simpan ke Supabase
         try:
             supabase.table("disease_logs").insert({
                 "user_id": request.user["user_id"],
@@ -81,7 +100,9 @@ def detect():
 
         return jsonify({
             "disease_class": class_label,
-            "confidence": confidence
+            "category": result["category"],
+            "confidence": confidence,
+            "recommendation": result["recommendation"]
         }), 200
 
     except Exception as e:

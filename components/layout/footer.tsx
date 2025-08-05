@@ -22,7 +22,7 @@ export function Footer() {
           </Link>
         </div>
         <p className="mt-4 text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} Tanami. Semua hak dilindungi.
+          &copy; {new Date().getFullYear()} GrowMind. Semua hak dilindungi.
         </p>
       </div>
     </footer>

@@ -61,7 +61,7 @@ export function HarvestCalculator() {
                   <SelectItem value="padi">Padi</SelectItem>
                   <SelectItem value="jagung">Jagung</SelectItem>
                   <SelectItem value="kedelai">Kedelai</SelectItem>
-                  <SelectItem value="cabe">Cabai</SelectItem>
+                  <SelectItem value="cabai">Cabai</SelectItem>
                   <SelectItem value="tomat">Tomat</SelectItem>
                 </SelectContent>
               </Select>
