@@ -59,10 +59,23 @@ class ApiClient {
     });
   }
 
-  async calculateHarvest(cropType: string, area: number) {
+  async calculateHarvest(
+    cropType: string,
+    area: number,
+    plantingDate: string,
+    pricePerKg?: number
+  ) {
     return this.request("/api/harvest/calculate", {
       method: "POST",
-      body: JSON.stringify({ crop_type: cropType, area }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        crop_type: cropType,
+        area,
+        planting_date: plantingDate,
+        ...(pricePerKg !== undefined && { price_per_kg: pricePerKg }),
+      }),
     });
   }
 
