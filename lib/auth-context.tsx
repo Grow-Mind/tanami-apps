@@ -26,21 +26,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    checkToken();
+    checkAuth();
   }, []);
 
-  const checkToken = async () => {
+  const checkAuth = async () => {
     const token = api.getToken();
     if (token) {
-      // You might want to verify token validity here
-      setUser({ id: "user-id", email: "user@example.com" }); // Simplified
+      const savedUser = localStorage.getItem("user");
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+      } else {
+        // try {
+        //   const fetchedUser = await api.getCurrentUser(); 
+        //   setUser(fetchedUser);
+        //   localStorage.setItem("user", JSON.stringify(fetchedUser));
+        // } catch (err) {
+        //   api.clearToken();
+        //   setUser(null);
+        // }
+      }
     }
     setLoading(false);
   };
 
   const login = async (email: string, password: string) => {
     const response = await api.login(email, password);
-    setUser({ id: response.user.id, email: response.user.email });
+    const loggedInUser: User = {
+      id: response.user.id,
+      email: response.user.email,
+      role: response.user.role,
+    };
+    setUser(loggedInUser);
+    localStorage.setItem("user", JSON.stringify(loggedInUser));
     router.push("/");
   };
 
@@ -51,6 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     api.clearToken();
+    localStorage.removeItem("user");
     setUser(null);
     router.push("/login");
   };
