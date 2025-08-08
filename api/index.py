@@ -29,7 +29,7 @@ app.register_blueprint(ecommerce_bp, url_prefix='/api/ecommerce')
 app.register_blueprint(education_bp, url_prefix='/api/education')
 
 
-@app.route('/')
+@app.route('/flask')
 def home():
     return jsonify({"message": "AGROWIN Backend Running"})
 

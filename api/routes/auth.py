@@ -37,4 +37,5 @@ def login():
         return jsonify({"token": token, "user": {"id": res.user.id, "email": res.user.email}})
     except Exception as e:
         print("Login error:", str(e))
+        print("Login payload:", data)
         return jsonify({"error": str(e)}), 401

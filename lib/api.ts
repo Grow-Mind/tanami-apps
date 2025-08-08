@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5328";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5328";
 
 class ApiClient {
   private token: string | null = null;
