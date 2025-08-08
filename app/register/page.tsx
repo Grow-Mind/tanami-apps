@@ -12,12 +12,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Leaf } from "lucide-react";
 import Link from "next/link";
 
 export default function RegisterPage() {
-  const [activeTab, setActiveTab] = useState("user");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -36,7 +34,7 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      await register(formData.email, formData.password, activeTab);
+      await register(formData.email, formData.password, "petani"); // hardcoded role petani
     } catch (error) {
       console.error("Registration failed:", error);
     } finally {
@@ -52,30 +50,11 @@ export default function RegisterPage() {
             <Leaf className="h-12 w-12 text-green-600" />
           </div>
           <CardTitle className="text-2xl">Daftar di Tanami</CardTitle>
-          <CardDescription>Pilih role Anda untuk memulai</CardDescription>
+          <CardDescription>
+            Buat akun Anda untuk memulai
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs
-            value={activeTab}
-            onValueChange={setActiveTab}
-            className="w-full"
-          >
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="user">Pembeli</TabsTrigger>
-              <TabsTrigger value="petani">Petani</TabsTrigger>
-            </TabsList>
-            <TabsContent value="user">
-              <p className="text-sm text-muted-foreground mb-4">
-                Daftar sebagai pembeli untuk berbelanja hasil pertanian segar
-              </p>
-            </TabsContent>
-            <TabsContent value="petani">
-              <p className="text-sm text-muted-foreground mb-4">
-                Daftar sebagai petani untuk menjual hasil panen Anda
-              </p>
-            </TabsContent>
-          </Tabs>
-
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Label htmlFor="email">Email</Label>
@@ -110,17 +89,17 @@ export default function RegisterPage() {
                 type="password"
                 value={formData.confirmPassword}
                 onChange={(e) =>
-                  setFormData({ ...formData, confirmPassword: e.target.value })
+                  setFormData({
+                    ...formData,
+                    confirmPassword: e.target.value,
+                  })
                 }
                 required
                 placeholder="••••••••"
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading
-                ? "Memproses..."
-                : "Daftar sebagai " +
-                  (activeTab === "user" ? "Pembeli" : "Petani")}
+              {loading ? "Memproses..." : "Daftar"}
             </Button>
           </form>
 
