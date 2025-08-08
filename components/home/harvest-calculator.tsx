@@ -13,8 +13,12 @@ import {
 import { Card } from "@/components/ui/card";
 import { CalendarIcon, Calculator } from "lucide-react";
 import { api } from "@/lib/api";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar"; 
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 
@@ -134,8 +138,7 @@ export function HarvestCalculator() {
                     mode="single"
                     selected={plantingDate ? new Date(plantingDate) : undefined}
                     onSelect={(date) => {
-                      if (date)
-                        setPlantingDate(date.toISOString().split("T")[0]); // simpan sebagai yyyy-mm-dd
+                      if (date) setPlantingDate(format(date, "yyyy-MM-dd"));
                     }}
                     locale={id}
                     initialFocus
